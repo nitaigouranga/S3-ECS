@@ -18,7 +18,8 @@ resource "aws_s3_bucket_notification" "name" {
 ```
 ##### cloudtrail.tf
 ```
-#S3 bucket for the cloudtrail data. The policy essentially allows Cloudtrail to write to this bucket.
+#S3 bucket for the cloudtrail data.
+#The policy essentially allows Cloudtrail to write to this bucket.
 resource "aws_s3_bucket" "cloudtrail" {
   bucket        = "myproject-cloudtrail2019"
   force_destroy = true
@@ -53,7 +54,8 @@ resource "aws_s3_bucket" "cloudtrail" {
 }
 POLICY
 }
-# This creates a new Cloudtrail and instructs it to report what's  going on with objects in the uploads bucket
+# This creates a new Cloudtrail and instructs it to report what's
+# going on with objects in the uploads bucket
 resource "aws_cloudtrail" "uploads" {
   name           = "myproject-cloudtrail-uploads"
   s3_bucket_name = "${aws_s3_bucket.cloudtrail.id}"
@@ -172,7 +174,8 @@ resource "aws_cloudwatch_event_rule" "uploads" {
 }
 PATTERN
 }
-# The target is the glue between the event rule and the ECS task definition. This instructs Cloudwatch to run the ECS job when the rule matches an event.
+# The target is the glue between the event rule and the ECS task definition.
+# This instructs Cloudwatch to run the ECS job when the rule matches an event.
 resource "aws_cloudwatch_event_target" "uploads" {
   target_id = "myproject-process-uploads"
   arn       = "${aws_ecs_cluster.demo-ecs-cluster.arn}"
@@ -208,7 +211,8 @@ resource "aws_iam_role" "uploads_events" {
 }
 POLICY
 }
-# This authorizes cloudwatch to run an ECS task with any given role. The task needs the role to access the S3 bucket.
+# This authorizes cloudwatch to run an ECS task with any given role.
+# The task needs the role to access the S3 bucket.
 resource "aws_iam_role_policy" "ecs_events_run_task_with_new_role" {
   name = "myproject-uploads-run-task-with-new-role"
   role = "${aws_iam_role.uploads_events.id}"
